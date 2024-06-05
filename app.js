@@ -45,8 +45,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/movies", moviesRouter);
-app.use("/bookmarks", bookmarksRouter); 
+//app.use("/routes/movies", moviesRouter);
+//app.use("/routes/bookmarks", bookmarksRouter); 
+app.use("/routes/aire.js", aireRouter);
+app.use("/routes/multas.js", multasRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
