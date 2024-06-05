@@ -1,7 +1,8 @@
+/*Backend */
 var express = require("express");
 var mongoose = require("mongoose");
 var router = express.Router();
-var debug = require("debug")("moviesApp:server");
+var debug = require("debug")("cityplus:server");
 
 //Models
 var Bookmark = require("../models/Bookmark.js");

@@ -1,3 +1,4 @@
+/*Backend */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 // var Movie = require('../models/Movie.js'); // necesario si no estamos dentro del mismo directorio

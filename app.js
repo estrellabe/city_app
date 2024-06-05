@@ -1,9 +1,10 @@
+// Backend
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-var debug = require('debug')('moviesApp:server');
+var debug = require('debug')('cityplus:server');
 
 //////NUEVO: Para poder usar variables de entorno
 require("dotenv").config();
@@ -13,6 +14,10 @@ var mongoose = require("mongoose");
 var indexRouter = require("./routes/index");
 var moviesRouter = require("./routes/movies");
 var bookmarksRouter = require("./routes/bookmarks");
+var usersRouter = require("./routes/users");
+var authRouter = require("./routes/auth"); //To be implemented //TODO
+var aireRouter = require("./routes/aire");
+var multasRouter = require("./routes/multas");
 
 var app = express();
 var bodyParser = require("body-parser");
@@ -27,8 +32,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 mongoose
   .connect(process.env.DB_URI,
     { useNewUrlParser: true, useUnifiedTopology: true }
-  )
-  .then(() => debug("MongoDB Atlas DataBase connection successful"));
+  ).then(() => debug("MongoDB Atlas DataBase connection successful"));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
