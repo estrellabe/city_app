@@ -1,11 +1,11 @@
 // Backend
+
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var debug = require('debug')('cityplus:server');
-
 //////NUEVO: Para poder usar variables de entorno
 require("dotenv").config();
 
