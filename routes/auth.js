@@ -1,25 +1,42 @@
 /* Backend */
-/*
 var express = require('express');
+var jwt = require('jsonwebtoken');
+var dotenv = require('dotenv');
+
+dotenv.config();
+
 const router = express.Router();
-
-// Authentication middleware
-const requireAuth = (req, res, next) => {
-    // Check if user is authenticated
-    if (req.isAuthenticated()) {
-        // User is authenticated, proceed to the next middleware or route handler
-        return next();
+/* Función para generar el token de autenticación */
+function generateToken(user){
+    var u = {
+        username: user.username,
+        id: user._id
     }
-
-    // User is not authenticated, redirect to login page or send an error response
-    res.redirect('/login');
-};
-
-// Protected route
-router.get('/protected', requireAuth, (req, res) => {
-    // This route is only accessible to authenticated users
-    res.send('Protected route');
+    return token = jwt.sign(u, process.env.TOKEN_SECRETO, {
+        expiresIn: 60 * 60 * 24 // expira en 24 hours
+    })
+}
+/* Middleware para validar el token */
+router.use('/secure', function(req, res, next){
+    var token = req.headers['authorization']
+    if(!token){
+        res.status(401).send({
+            ok: false,
+            message: 'Token inválido'
+        })
+    }
+    token = token.replace('Bearer ', '') // Remover Bearer del token, asumimos que viene con ese prefijo
+    jwt.verify(token, process.env.TOKEN_SECRETO, function(err, decoded){
+        if(err){
+            return res.status(401).send({
+                ok: false,
+                message: 'Token inválido'
+            });
+        } else {
+            req.token = decoded
+            next()
+        }
+    });
 });
 
 module.exports = router;
-*/

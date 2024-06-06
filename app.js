@@ -1,5 +1,4 @@
 // Backend
-
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -12,10 +11,10 @@ require("dotenv").config();
 var mongoose = require("mongoose");
 
 var indexRouter = require("./routes/index");
-var moviesRouter = require("./routes/movies");
-var bookmarksRouter = require("./routes/bookmarks");
-var usersRouter = require("./routes/users");
-var authRouter = require("./routes/auth"); //To be implemented //TODO
+var moviesRouter = require("./routes/movies"); //ToDo eliminar
+var bookmarksRouter = require("./routes/bookmarks"); //ToDo eliminar
+var usersRouter = require("./routes/users"); //ToDo eliminar
+var authRouter = require("./routes/auth.js"); //To be implemented //TODO
 var aireRouter = require("./routes/aire");
 var multasRouter = require("./routes/multas");
 
@@ -46,8 +45,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-//app.use("/routes/movies", moviesRouter);
-//app.use("/routes/bookmarks", bookmarksRouter); 
+//app.use("/routes/movies", moviesRouter); //ToDo eliminar
+//app.use("/routes/bookmarks", bookmarksRouter); //ToDo eliminar
 app.use("/routes/aire.js", aireRouter);
 app.use("/routes/multas.js", multasRouter);
 
