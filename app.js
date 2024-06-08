@@ -4,30 +4,30 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-var debug = require('debug')('cityplus:server');
-//////NUEVO: Para poder usar variables de entorno
+var debug = require('debug')('cityplus:server');//////NUEVO: Para poder usar variables de entorno
 require("dotenv").config();
 
 var mongoose = require("mongoose");
+var passport = require("passport");
+var bodyParser = require("body-parser");
+var cors = require("cors");
 
 var indexRouter = require("./routes/index");
-var moviesRouter = require("./routes/movies"); //ToDo eliminar
-var bookmarksRouter = require("./routes/bookmarks"); //ToDo eliminar
-var usersRouter = require("./routes/users"); //ToDo eliminar
-var authRouter = require("./routes/auth.js"); //To be implemented //TODO
+var authRouter = require("./routes/auth");
 var aireRouter = require("./routes/aire");
 var multasRouter = require("./routes/multas");
 
 var app = express();
-var bodyParser = require("body-parser");
-var cors = require("cors");
 
+// Inicialización de passport
+app.use(passport.initialize());
+
+// Congiguración de middlewares
 app.use(cors());
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
-
-// MongoDB Atlas DB cluster connection
+// Conexión a la base de datos de MongoDB Atlas
 mongoose
   .connect(process.env.DB_URI,
     { useNewUrlParser: true, useUnifiedTopology: true }
@@ -44,11 +44,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Configuración de rutas
 app.use("/", indexRouter);
-//app.use("/routes/movies", moviesRouter); //ToDo eliminar
-//app.use("/routes/bookmarks", bookmarksRouter); //ToDo eliminar
-app.use("/routes/aire.js", aireRouter);
-app.use("/routes/multas.js", multasRouter);
+app.use("/auth", authRouter);
+app.use("/aire", aireRouter);
+app.use("/multas", multasRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
