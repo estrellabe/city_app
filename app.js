@@ -1,4 +1,3 @@
-// Backend
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -8,6 +7,7 @@ var debug = require('debug')('cityplus:server');//////NUEVO: Para poder usar var
 require("dotenv").config();
 
 var mongoose = require("mongoose");
+mongoose.set('strictQuery', true);
 var passport = require("passport");
 var bodyParser = require("body-parser");
 var cors = require("cors");
