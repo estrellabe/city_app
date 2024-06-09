@@ -1,9 +1,9 @@
-/* Backend */
 var express = require('express');
 var jwt = require('jsonwebtoken');
 var dotenv = require('dotenv');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
+var router = express.Router();
 
 dotenv.config();
 
