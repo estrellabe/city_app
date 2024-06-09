@@ -1,7 +1,9 @@
-/*Backend */
 var express = require("express");
+var mongoose = require("mongoose");
+//mongoose.set('strictQuery', false);
 var router = express.Router();
 var debug = require("debug")("cityplus:server");
+var db = mongoose.connection;
 
 var users = {
   users: [

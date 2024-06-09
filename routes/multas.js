@@ -1,54 +1,135 @@
-/*Backend */
-//aquí se definen las rutas y operaciones CRUD para el modelo Multas
+// Propósito: Manejar las rutas y operaciones CRUD para el modelo Multa
 var express = require("express");
 var mongoose = require("mongoose");
-mongoose.set('strictQuery', false);
 var router = express.Router();
 var debug = require("debug")("cityplus:server");
-
-//Models
-var Multas = require("../models/Multas.js");
-
 var db = mongoose.connection;
 
-/* GET multas listing */
-router.get("/multas/", function (req, res) {
-  Multas.find().exec(function (err, multas) {
-    if (err) res.status(500).send(err);
-    else res.status(200).json(multas);
-  });
+//Modelo de datos
+var Multa = require("../models/Multa");
+
+// Conexión a la base de datos
+db.on("error", console.error.bind(console, "Error de conexión con la BD: "));
+db.once("open", function () {
+  debug("BD conectada correctamente");
 });
 
-/* GET (devolver) una sola multa by Id */
-router.get("/multas/:id", function (req, res, next) {
-  Multas.findById(req.params.id, function (err, multasinfo) {
-    if (err) res.status(500).send(err);
-    else res.status(200).json(multasinfo);
+// Crear una nueva multa - POST
+router.post("/", async (req, res) => {
+  try {
+    const multa = new Multa(req.body);
+    await multa.save();
+    res.status(201).send(multa);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
   });
+
+// Obtener todas las multas - GET
+router.get("/", async (req, res) => {
+  try {
+    const multas = await Multa.find();
+    res.json(multas);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-/*POST (añadir) nueva multa*/
-router.post('/multa/', function (req, res) {
-  Multas.create(req.body, function (err, multasinfo) {
-    if (err) res.status(500).send(err);
-    else res.sendStatus(200);
-  });
+// Obtener una multa por ID - GET
+router.get("/:id", async (req, res) => {
+  try {
+    const multa = await Multa.findById(req.params.id);
+    if (!multa) return res.status(404).json({ error: "Multa no encontrada" });
+    res.json(multa);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-/*PUT (actualizar) una multa*/
-router.put('/multas/:id', function (req, res){
-  Multas.findByIdAndUpdate(req.params.id, req.body, function (err, multasinfo){
-    if (err) res.status(500).send(err);
-    else res.sendStatus(200);
-  });
+// Obtener multas por mes - GET
+router.get("/mes/:mes", async (req, res) => {
+  try {
+    const multas = await Multa.find({ MES: req.params.mes });
+    if (!multas) return res.status(404).json({ error: "Multa no encontrada" });
+    res.json(multas);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-/*DELETE (borrar) una multa*/
-router.delete('/multas/:id', function (req, res){
-  Multas.findByIdAndDelete(req.params.id, req.body, function (err, multasinfo){
-    if (err) res.status(500).send(err);
-    else res.sendStatus(200);
-  });
+// Obtener multas por denunciante - GET
+router.get("/denunciante/:denunciante", async (req, res) => {
+  try {
+    const multas = await Multa.find({ DENUNCIANTE: req.params.denunciante });
+    if (!multas) return res.status(404).json({ error: "Multa no encontrada" });
+    res.json(multas);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Obtener multas por hora - GET
+router.get("/hora/:hora", async (req, res) => {
+  try {
+    const multas = await Multa.find({ HORA: req.params.hora });
+    if (!multas) return res.status(404).json({ error: "Multa no encontrada" });
+    res.json(multas);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Obtener multas por calificación - GET
+router.get("/calificacion/:calificacion", async (req, res) => {
+  try {
+    const multas = await Multa.find({ CALIFICACION: req.params.calificacion });
+    if (!multas) return res.status(404).json({ error: "Multa no encontrada" });
+    res.json(multas);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Actualizar una multa por ID - PUT
+router.put("/:id", async (req, res) => {
+  try {
+    const multa = await Multa.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!multa) return res.status(404).json({ error: "Multa no encontrada" });
+    res.json(multa);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Eliminar una multa por ID - DELETE
+router.delete("/:id", async (req, res) => {
+  try {
+    const multa = await Multa.findByIdAndDelete(req.params.id);
+    if (!multa) return res.status(404).json({ error: "Multa no encontrada" });
+    res.json(multa);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Obtener Coordenada_X de multas - GET
+router.get("/coordenada_x", async (req, res) => {
+  try {
+    const multas = await Multa.find({ COORDENADA_X: { $exists: true } }, { COORDENADA_X: 1 });
+    res.json(multas);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Obtener Coordenada_Y de multas - GET
+router.get("/coordenada_y", async (req, res) => {
+  try {
+    const multas = await Multa.find({ COORDENADA_Y: { $exists: true } }, { COORDENADA_Y: 1 });
+    res.json(multas);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 module.exports = router;

@@ -16,13 +16,18 @@ var indexRouter = require("./routes/index");
 var authRouter = require("./routes/auth");
 var aireRouter = require("./routes/aire");
 var multasRouter = require("./routes/multas");
+var bicicletasRouter = require("./routes/bicicletas");
+var contaminacionAcusticaRouter = require("./routes/contaminacionAcustica");
+var contenedoresRouter = require("./routes/contenedores");
+var peatonesRouter = require("./routes/peatones");
+var censoRouter = require("./routes/censo");
 
 var app = express();
 
-// Inicialización de passport
+// Inicializar de passport
 app.use(passport.initialize());
 
-// Congiguración de middlewares
+// Congigurar middlewares
 app.use(cors());
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
@@ -30,9 +35,9 @@ app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 // Conexión a la base de datos de MongoDB Atlas
 mongoose
   .connect(process.env.DB_URI,
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  ).then(() => debug("MongoDB Atlas DataBase connection successful")
-  ).catch((err) => debug("MongoDB Atlas DataBase connection (URI) error: ", err));
+    { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => debug("Conexión exitosa a la base de datos de MongoDB Atlas"))
+  .catch((err) => debug("Error al intentar conectarse a la base de datos de MongoDB Atlas: ", err));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -49,6 +54,11 @@ app.use("/", indexRouter);
 app.use("/auth", authRouter);
 app.use("/aire", aireRouter);
 app.use("/multas", multasRouter);
+app.use("/bicicletas", bicicletasRouter);
+app.use("/contaminacionAcustica", contaminacionAcusticaRouter);
+app.use("/contenedores", contenedoresRouter);
+app.use("/peatones", peatonesRouter);
+app.use("/censo", censoRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
