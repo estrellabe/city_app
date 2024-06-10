@@ -13,7 +13,7 @@ var bodyParser = require("body-parser");
 var cors = require("cors");
 
 var indexRouter = require("./routes/index");
-var authRouter = require("./routes/auth");
+var autenticacionRouter = require("./routes/autenticacion");
 var aireRouter = require("./routes/aire");
 var multasRouter = require("./routes/multas");
 var bicicletasRouter = require("./routes/bicicletas");
@@ -51,7 +51,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Configuración de rutas
 app.use("/", indexRouter);
-app.use("/auth", authRouter);
+app.use("/autenticacion", autenticacionRouter);
 app.use("/aire", aireRouter);
 app.use("/multas", multasRouter);
 app.use("/bicicletas", bicicletasRouter);
