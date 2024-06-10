@@ -8,57 +8,27 @@ var db = mongoose.connection;
 // Modelo de datos
 var Usuario = require("../models/Usuario");
 
-var users = {
-  users: [
-    {
-      id: 123,
-      name: "Jane Doe",
-      phones: {
-        home: "800-123-4567",
-        mobile: "877-123-1234",
-      },
-      email: ["jd@example.com", "jd@example.org"],
-      dateOfBirth: "1980-01-02T00:00:00.000Z",
-      registered: true,
-    },
-    {
-      id: 456,
-      name: "Peter Nolan",
-      phones: {
-        home: "800-123-3498",
-        mobile: "877-432-1278",
-      },
-      email: ["pt@example.com", "pt@example.org"],
-      dateOfBirth: "1983-01-09T00:00:00.000Z",
-      registered: false,
-    },
-  ],
-};
-
 // Middleware para verificar si el usuario esta autenticado
 const verificarTolen = (req, res, next) => {
   const token = req.headers['authorization'];
   if (!token) {
     return res.status(403).json({ error: 'No se proporcionó un token' });
-  } else {
-    jwt.verify(token, process.env.TOKEN_SECRETO, (error, decoded) => {
+  }
+    jwt.verify(token.split(' ')[1], process.env.TOKEN_SECRETO, (error, decoded) => {
       if (error) {
         return res.status(401).json({ error: 'Token inválido' });
-      } else {
-        req.decoded = decoded;
-        next();
       }
+      req.decoded = decoded;
+      next();
     });
-  }
-  next();
-}
+};
 
-/* GET users listing. */
-router.get("/", verificarTolen, async (req, res) => {
+
+// GET del usuario autenticado
+router.get("/me", verificarTolen, async (req, res) => {
   try {
-    const { googleID } = req.user;
-    const usuario = await Usuario.findOne({ googleID });
-    if (!usuario){
+    const usuario = await Usuario.findById(req.user.id);
+    if (!usuario) {
       return res.status(404).send('Usuario no encontrado');
     }
     res.json(usuario);
