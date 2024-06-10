@@ -112,24 +112,5 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// Obtener Coordenada_X de multas - GET
-router.get("/coordenada_x", async (req, res) => {
-  try {
-    const multas = await Multa.find({ COORDENADA_X: { $exists: true } }, { COORDENADA_X: 1 });
-    res.json(multas);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Obtener Coordenada_Y de multas - GET
-router.get("/coordenada_y", async (req, res) => {
-  try {
-    const multas = await Multa.find({ COORDENADA_Y: { $exists: true } }, { COORDENADA_Y: 1 });
-    res.json(multas);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
 module.exports = router;

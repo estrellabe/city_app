@@ -119,26 +119,4 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-// Obtener Coordenada_X - GET
-router.get('/coordenada_x/:coordenada_x', async (req, res) => {
-  try {
-    const contenedores = await Contenedor.find({ COORDENADA_X: req.params.coordenada_x });
-    if (!contenedores) return res.status(404).json({ error: 'Contenedor no encontrado' });
-    res.json(contenedores);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Obtener Coordenada_Y - GET
-router.get('/coordenada_y/:coordenada_y', async (req, res) => {
-  try {
-    const contenedores = await Contenedor.find({ COORDENADA_Y: req.params.coordenada_y });
-    if (!contenedores) return res.status(404).json({ error: 'Contenedor no encontrado' });
-    res.json(contenedores);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 module.exports = router;
