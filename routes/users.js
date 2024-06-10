@@ -5,6 +5,9 @@ var router = express.Router();
 var debug = require("debug")("cityplus:server");
 var db = mongoose.connection;
 
+// Modelo de datos
+var Usuario = require("../models/Usuario");
+
 var users = {
   users: [
     {
@@ -32,32 +35,36 @@ var users = {
   ],
 };
 
-/* GET users listing. */
-router.get("/", function (req, res, next) {
-  debug("RECUPERA DE LA BASE DE DATOS TODOS LOS USUARIOS...");
-  debug("lISTA DE USUARIOS EN FORMATO JSON: ");
-  debug(users);
-  res.json(users); // fin res.json()
-}); // fin función get()
+// Middleware para verificar si el usuario esta autenticado
+const verificarTolen = (req, res, next) => {
+  const token = req.headers['authorization'];
+  if (!token) {
+    return res.status(403).json({ error: 'No se proporcionó un token' });
+  } else {
+    jwt.verify(token, process.env.TOKEN_SECRETO, (error, decoded) => {
+      if (error) {
+        return res.status(401).json({ error: 'Token inválido' });
+      } else {
+        req.decoded = decoded;
+        next();
+      }
+    });
+  }
+  next();
+}
 
-/* GET user by id */
-router.get("/:id", function (req, res, next) {
-  if (req.params.id == "123") {
-    debug("RECUPERA EL USUARIO: "); 
-    debug(req.params.id);
-    var user = {
-      id: 123,
-      name: "Jane Doe",
-      phones: {
-        home: "800-123-4567",
-        mobile: "877-123-1234",
-      },
-      email: ["jd@example.com", "jd@example.org"],
-      dateOfBirth: "1980-01-02T00:00:00.000Z",
-      registered: true,
-    };
-    res.json(user);
-  } else res.status(404).send("Sorry, item not found!");
+/* GET users listing. */
+router.get("/", verificarTolen, async (req, res) => {
+  try {
+    const { googleID } = req.user;
+    const usuario = await Usuario.findOne({ googleID });
+    if (!usuario){
+      return res.status(404).send('Usuario no encontrado');
+    }
+    res.json(usuario);
+  } catch (error) {
+    res.status(500).send('Error en el servidor');
+  }
 });
 
 /* POST a new user */
