@@ -18,4 +18,4 @@ var CensoSchema = new Schema({
   ExtranjerosMujeres: { type: Number }
 });
 
-module.exports = mongoose.model("Censo", CensoSchema);
+module.exports = mongoose.model("Censo", CensoSchema, "censo");
