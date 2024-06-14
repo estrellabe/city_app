@@ -33,11 +33,9 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 // Conexión a la base de datos de MongoDB Atlas
-mongoose
-  .connect(process.env.DB_URI,
-    { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => debug("Conexión exitosa a la base de datos de MongoDB Atlas"))
-  .catch((err) => debug("Error al intentar conectarse a la base de datos de MongoDB Atlas: ", err));
+mongoose.connect(process.env.DB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("Conexión exitosa a la base de datos de MongoDB Atlas"))
+  .catch((err) => console.log("Error al intentar conectarse a la base de datos de MongoDB Atlas: ", err));
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
