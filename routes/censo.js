@@ -14,33 +14,11 @@ db.once("open", function() {
   debug("MongoDB connected");
 });
 
-// Crear un nuevo registro de censo - POST
-router.post("/", async (req, res) => {
-  try {
-    const registro = new Censo(req.body);
-    await registro.save();
-    res.status(201).json(registro);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
 // Obtener todos los registros de censo - GET
-router.get("/", async (req, res) => {
+router.get("/censo/all", async (req, res) => {
   try {
     const registros = await Censo.find();
     res.json(registros);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Obtener un registro de censo (ID) - GET
-router.get("/:id", async (req, res) => {
-  try {
-    const registro = await Censo.findById(req.params.id);
-    if (!registro) return res.status(404).json({ error: "Registro no encontrado" });
-    res.json(registro);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -57,26 +35,36 @@ router.get("/distrito/:distrito", async (req, res) => {
   }
 });
 
-// Actualizar un registro de censo (ID) - PUT
-router.put("/:id", async (req, res) => {
+// Obtener registros de censo por codigo de barrio - GET
+router.get('/media/anual', async (req, res) => {
+  const mes = parseInt(req.params.month);
   try {
-    const registro = await Censo.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!registro) return res.status(404).json({ error: "Registro no encontrado" });
-    res.json(registro);
+    const result = await Aire.aggregate([
+      {
+        $group: {
+          _id: "$MES",
+          avgValue: { 
+            $avg: {
+              $avg: [
+                "$H01", "$H02", "$H03", "$H04", "$H05", "$H06", 
+                "$H07", "$H08", "$H09", "$H10", "$H11", "$H12",
+                "$H13", "$H14", "$H15", "$H16", "$H17", "$H18",
+                "$H19", "$H20", "$H21", "$H22", "$H23", "$H24"
+              ]
+            }
+          }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]);
+    
+    res.json(result);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
-// Eliminar un registro de censo (ID) - DELETE
-router.delete("/:id", async (req, res) => {
-  try {
-    const registro = await Censo.findByIdAndDelete(req.params.id);
-    if (!registro) return res.status(404).json({ error: "Registro no encontrado" });
-    res.json({ message: "Registro eliminado" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 
 module.exports = router;
