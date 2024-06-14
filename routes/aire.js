@@ -15,6 +15,32 @@ db.once("open", function () {
   debug("BD conectada correctamente");
 });
 
+// Obtener la media de la calidad del aire por mes
+router.get('/media/mes/:mes', async (req, res) => {
+  const mes = parseInt(req.params.month);
+
+  try {
+    const resultado = await Aire.aggregate([
+      { $match: { MES: month } },
+      {
+        $group: {
+          _id: "$DIA",
+          avgValue: {
+            $avg: {
+              $avg: [
+                "$H01", "$H02", "$H03", "$H04", "$H05", "$H06", "$H07", "$H08", "$H09", "$H10", "$H11", "$H12", "$H13", "$H14", "$H15", "$H16", "$H17", "$H18", "$H19", "$H20", "$H21", "$H22", "$H23", "$H24"]
+              }
+        }
+      }
+    },
+    { $sort: { "_id": 1 } }
+  ]);
+  res.json(resultado);
+} catch (error) {
+  res.status(500).json({ error: error.message });
+}
+});
+
 
 // Obtener los registros de aire por mes - GET
 router.get('/mes/:mes', async (req, res) => {
