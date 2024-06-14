@@ -26,31 +26,33 @@ router.post("/", async (req, res) => {
 });
 
 // Obtener todos los registros de aire - GET
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const registros = await Aire.find();
-
-    // Transformacion de los datos
-
-    const registrosTransformados = registros.map((entry) => {
+    const aireData = await Aire.find();
+    console.log('Datos originales:', aireData); // Verificar los datos originales
+    
+    // Transformar los datos
+    const datosTransformados = aireData.map(entry => {
       const date = new Date(entry.ano, entry.mes - 1, entry.dia);
       const values = [];
-
+      
       for (let i = 1; i <= 24; i++) {
-        const keyH = `H${i.toString().padStart(2, "0")}`;
-        const keyV = `V${i.toString().padStart(2, "0")}`;
-
-        if (entry[keyV] === 'V') {
-          values.push({
-            date: new Date(date.getTime() + (i - 1) * 60 * 60 * 1000), value: entry[keyH] });
+        const HKey = `H${i.toString().padStart(2, '0')}`;
+        const VKey = `V${i.toString().padStart(2, '0')}`;
+        
+        if (entry[VKey] === 'V') {
+          values.push({ date: new Date(date.getTime() + (i - 1) * 60 * 60 * 1000), value: entry[HKey] });
         }
       }
-    return values;
+
+      return values;
     }).flat();
-    console.log(registrosTransformados);
-    res.json(registrosTransformados);
+
+    console.log('Datos transformados:', datosTransformados); // Verificar los datos transformados
+    res.json(datosTransformados);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error al obtener los datos:', error);
+    res.status(500).send(error);
   }
 });
 
