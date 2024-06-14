@@ -14,55 +14,35 @@ db.once("open", function () {
   debug("BD conectada correctamente");
 });
 
-// Crear nuevo registro de aire - POST
-router.post("/", async (req, res) => {
-  try {
-    const registro = new Aire(req.body);
-    await registro.save();
-    res.status(201).json(registro);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
 // Obtener los registros de aire por municipio - GET
 router.get("/municipio/:municipio", async (req, res) => {
   try {
     const municipio = req.params.municipio;
-    const aireData = await Aire.find({ MUNICIPIO: municipio });
-    console.log('Datos originales:', aireData); // Ahora hay que transformarlos
+
+    const aireData = await Aire.aggregate([
+      { $match: { municipio: municipio } },
+      {
+        $group: {
+          _id: { month: { $month: "$date"}},
+          avg: { $avg: "$value" }
+        }
+      },
+      {
+        $sort: { "_id.month": 1 }
+      }
+    ]);
 
     // Transformacion de los datos y cálculo de la media mensual
-    const mediaMensual = {};
-
-    aireData.forEach(entry => {
-      const mes = `${entry.ano}-${entry.mes.toString().padStart(2, '0')}`;
-
-      if (!mediaMensual[mes]) {
-        mediaMensual[mes] = { total: 0, count: 0 };
-      }
-
-      for (let i = 1; i <= 24; i++) {
-        const HKey = `H${i.toString().padStart(2, '0')}`;
-        const VKey = `V${i.toString().padStart(2, '0')}`;
-
-        if (entry[VKey] === 'V') {
-          mediaMensual[mes].total += entry[HKey];
-          mediaMensual[mes].count+= 1;
-        }
-      }
-    });
-
-    const datosTransformados = Object.keys(mediaMensual).map(mes => {
-      return {
-        mes: mes,
-        media: mediaMensual[mes].total / mediaMensual[mes].count
-      };
-    });
-  console.log('Datos transformados:', datosTransformados);
-  res.json(datosTransformados);
+    const datosTransformados = aireData.map(entry => ({
+      date: new Date(entry._id.month - 1),
+      value: entry.avg
+    }));
+    console.log('Datos originales: ', aireData);
+    console.log('Datos transformados: ', datosTransformados);
+    res.json(datosTransformados);
   } catch (error) {
-    console.error('Error al obtener los datos:', error);
-    res.status(500).send(error);
+    console.error('Error al obtener los datos: ', error);
+    res.status(500).send('Error al obtener los datos');
   }
 });
 
@@ -94,39 +74,6 @@ router.get('/', async (req, res) => {
   } catch (error) {
     console.error('Error al obtener los datos:', error);
     res.status(500).send(error);
-  }
-});
-
-// Obtener un registro de aire (ID) - GET
-router.get("/:id", async (req, res) => {
-  try {
-    const registro = await Aire.findById(req.params.id);
-    if (!registro) return res.status(404).json({ error: "Registro no encontrado"});
-    res.json(registro);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Actualizar un registro de aire (ID) - PUT
-router.put("/:id", async (req, res) => {
-  try {
-    const registro = await Aire.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!registro) return res.status(404).json({ error: "Registro no encontrado" });
-    res.json(registro);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
-
-// Eliminar un registro de aire (ID) - DELETE
-router.delete("/:id", async (req, res) => {
-  try {
-    const registro = await Aire.findByIdAndDelete(req.params.id);
-    if (!registro) return res.status(404).json({ error: "Registro no encontrado" });
-    res.json({ message: "Registro eliminado" });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
   }
 });
 
