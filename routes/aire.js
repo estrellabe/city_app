@@ -9,12 +9,12 @@ var db = mongoose.connection;
 var Aire = require("../models/Aire");
 
 // Conexión a la base de datos
-/*
+
 db.on("error", console.error.bind(console, "Error de conexión con la BD: "));
 db.once("open", function () {
   debug("BD conectada correctamente");
 });
-*/
+
 
 // Obtener los registros de aire por mes - GET
 router.get('/mes/:mes', async (req, res) => {
