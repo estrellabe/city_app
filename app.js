@@ -24,7 +24,7 @@ var usuariosRouter = require("./routes/usuarios");
 
 var app = express();
 
-// Inicializar de passport
+// Inicializar passport
 app.use(passport.initialize());
 
 // Congigurar middlewares
