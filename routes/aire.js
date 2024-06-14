@@ -18,24 +18,25 @@ db.once("open", function () {
 
 // Obtener los registros de aire por mes - GET
 router.get('/mes/:mes', async (req, res) => {
+  const mes = parseInt(req.params.mes, 10);
   try {
-    const mes = parseInt(req.params.mes, 10);
-    const datosAire = await Aire.find({ MES: mes });
-    const datosTransformados = datosAire.map(dato => {
-      const date = dato.DIA ? new Date(dato.ANO, dato.MES - 1, dato.DIA) : null;
-      return {
-        date: date && !isNaN(date) ? date : null,
-        value: dato.H01 
-      };
-    }).filter(dato => dato.date); 
-
-    console.log('Datos originales:', datosAire);
-    console.log('Datos transformados:', datosTransformados);
-
-    res.json(datosTransformados);
+    const data = await Aire.aggregate([
+      { $match: { MES: mes } },
+      {
+        $group: {
+          _id: { dia: "$DIA" },
+          averageValue: { $avg: "$H01" }
+        }
+      },
+      { $sort: { "_id.dia": 1 } }
+    ]);
+    res.json(data.map(item => ({
+      date: new Date(2051, mes - 1, item._id.dia),
+      value: item.averageValue
+    })));
   } catch (error) {
-    console.error('Error al obtener los datos del aire:', error);
-    res.status(500).json({ error: 'Error al obtener los datos del aire' });
+    console.error('Error fetching data:', error);
+    res.status(500).send('Error fetching data');
   }
 });
 
