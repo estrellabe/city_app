@@ -24,6 +24,47 @@ router.post("/", async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+// Obtener los registros de aire por municipio - GET
+router.get("/municipio/:municipio", async (req, res) => {
+  try {
+    const municipio = req.params.municipio;
+    const aireData = await Aire.find({ MUNICIPIO: municipio });
+    console.log('Datos originales:', aireData); // Ahora hay que transformarlos
+
+    // Transformacion de los datos y cálculo de la media mensual
+    const mediaMensual = {};
+
+    aireData.forEach(entry => {
+      const mes = `${entry.ano}-${entry.mes.toString().padStart(2, '0')}`;
+
+      if (!mediaMensual[mes]) {
+        mediaMensual[mes] = { total: 0, count: 0 };
+      }
+
+      for (let i = 1; i <= 24; i++) {
+        const HKey = `H${i.toString().padStart(2, '0')}`;
+        const VKey = `V${i.toString().padStart(2, '0')}`;
+
+        if (entry[VKey] === 'V') {
+          mediaMensual[mes].total += entry[HKey];
+          mediaMensual[mes].count+= 1;
+        }
+      }
+    });
+
+    const datosTransformados = Object.keys(mediaMensual).map(mes => {
+      return {
+        mes: mes,
+        media: mediaMensual[mes].total / mediaMensual[mes].count
+      };
+    });
+  console.log('Datos transformados:', datosTransformados);
+  res.json(datosTransformados);
+  } catch (error) {
+    console.error('Error al obtener los datos:', error);
+    res.status(500).send(error);
+  }
+});
 
 // Obtener todos los registros de aire - GET
 router.get('/', async (req, res) => {
