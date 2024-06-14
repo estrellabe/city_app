@@ -21,16 +21,21 @@ router.get('/mes/:mes', async (req, res) => {
   try {
     const mes = parseInt(req.params.mes, 10);
     const datosAire = await Aire.find({ MES: mes });
-    const datosTransformados = datosAire.map(dato => ({
-      date: new Date(dato.MES - 1, dato.DIA),
-      value: dato.H01
-    }));
+    const datosTransformados = datosAire.map(dato => {
+      const date = dato.DIA ? new Date(dato.ANO, dato.MES - 1, dato.DIA) : null;
+      return {
+        date: date && !isNaN(date) ? date : null,
+        value: dato.H01 
+      };
+    }).filter(dato => dato.date); 
+
     console.log('Datos originales:', datosAire);
     console.log('Datos transformados:', datosTransformados);
+
     res.json(datosTransformados);
   } catch (error) {
-    console.error('Error al obtener los datos de calidad del aire:', error);
-    res.status(500).json({ error: 'Error al obtener los datos de calidad del aire' });
+    console.error('Error al obtener los datos del aire:', error);
+    res.status(500).json({ error: 'Error al obtener los datos del aire' });
   }
 });
 
