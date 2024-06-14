@@ -14,7 +14,7 @@ var Usuario = require("../models/Usuario");
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 
 // Middleware para verificar si el usuario está autenticado
-const verificarToken = (req, res, next) => {
+const verificarToken = async (req, res, next) => {
   const token = req.headers['authorization'];
   if (!token) {
     return res.status(403).json({ error: 'No se proporcionó un token' });
