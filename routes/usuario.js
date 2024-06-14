@@ -9,7 +9,7 @@ var db = mongoose.connection;
 var Usuario = require("../models/Usuario");
 
 // Middleware para verificar si el usuario esta autenticado
-const verificarTolen = (req, res, next) => {
+const verificarToken = (req, res, next) => {
   const token = req.headers['authorization'];
   if (!token) {
     return res.status(403).json({ error: 'No se proporcionó un token' });
@@ -25,9 +25,9 @@ const verificarTolen = (req, res, next) => {
 
 
 // GET del usuario autenticado
-router.get("/me", verificarTolen, async (req, res) => {
+router.get("/me", verificarToken, async (req, res) => {
   try {
-    const usuario = await Usuario.findById(req.user.id);
+    const usuario = await Usuario.findById(req.user.email);
     if (!usuario) {
       return res.status(404).send('Usuario no encontrado');
     }
@@ -44,17 +44,17 @@ router.post("/", function (req, res, next) {
   res.status(200).send("User " + req.body.name + " has successfully added");
 });
 
-/* PUT user by Id */
-router.put("/:id", function (req, res, next) {
+/* PUT user by email */
+router.put("/:email", function (req, res, next) {
   var updated_user = req.body;
-  //ToDo user id (update)
-  res.status(200).send("User " + req.body.name + " successfully updated");
+  //ToDo user email (update)
+  res.status(200).send("User with email " + req.body.email + " successfully updated");
 });
 
-/* DELETE user by Id */
-router.delete("/:id", function (req, res, next) {
-  //ToDo user id
-  res.status(200).send("User with id" + req.params.id + " successfully removed");
+/* DELETE user by email */
+router.delete("/:email", function (req, res, next) {
+  //ToDo user email
+  res.status(200).send("User with email" + req.params.email + " successfully removed");
 });
 
 module.exports = router;
