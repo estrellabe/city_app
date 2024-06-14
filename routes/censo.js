@@ -17,7 +17,7 @@ db.once("open", function() {
 // Obtener todos los registros de censo - GET
 router.get("/all", async (req, res) => {
   try {
-    const registros = await Censo.find().limit(5000);
+    const registros = await Censo.find().limit(10000);
     res.json(registros);
   } catch (error) {
     res.status(500).json({ error: error.message });
