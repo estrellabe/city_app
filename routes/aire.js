@@ -9,42 +9,31 @@ var db = mongoose.connection;
 var Aire = require("../models/Aire");
 
 // Conexión a la base de datos
+/*
 db.on("error", console.error.bind(console, "Error de conexión con la BD: "));
 db.once("open", function () {
   debug("BD conectada correctamente");
 });
+*/
 
-// Obtener los registros de aire por municipio - GET
-router.get("/municipio/:municipio", async (req, res) => {
+// Obtener los registros de aire por mes - GET
+router.get('/mes/:mes', async (req, res) => {
   try {
-    const municipio = req.params.municipio;
-
-    const aireData = await Aire.aggregate([
-      { $match: { municipio: municipio } },
-      {
-        $group: {
-          _id: { month: { $month: "$date"}},
-          avg: { $avg: "$value" }
-        }
-      },
-      {
-        $sort: { "_id.month": 1 }
-      }
-    ]);
-
-    // Transformacion de los datos y cálculo de la media mensual
-    const datosTransformados = aireData.map(entry => ({
-      date: new Date(entry._id.month - 1),
-      value: entry.avg
+    const mes = parseInt(req.params.mes, 10);
+    const datosAire = await Aire.find({ MES: mes });
+    const datosTransformados = datosAire.map(dato => ({
+      date: new Date(dato.MES - 1, dato.DIA),
+      value: dato.H01
     }));
-    console.log('Datos originales: ', aireData);
-    console.log('Datos transformados: ', datosTransformados);
+    console.log('Datos originales:', datosAire);
+    console.log('Datos transformados:', datosTransformados);
     res.json(datosTransformados);
   } catch (error) {
-    console.error('Error al obtener los datos: ', error);
-    res.status(500).send('Error al obtener los datos');
+    console.error('Error al obtener los datos de calidad del aire:', error);
+    res.status(500).json({ error: 'Error al obtener los datos de calidad del aire' });
   }
 });
+
 
 // Obtener todos los registros de aire - GET
 router.get('/', async (req, res) => {
