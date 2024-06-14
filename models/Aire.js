@@ -62,4 +62,4 @@ var AireSchema = new Schema({
   V24: { type: String }
 });
 
-module.exports = mongoose.model("Aire", AireSchema);
+module.exports = mongoose.model("Aire", AireSchema, aire);
