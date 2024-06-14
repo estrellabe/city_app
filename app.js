@@ -60,6 +60,11 @@ app.use("/peatones", peatonesRouter);
 app.use("/censo", censoRouter);
 app.use("/api", usuariosRouter);
 
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
