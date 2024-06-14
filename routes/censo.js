@@ -15,7 +15,7 @@ db.once("open", function() {
 });
 
 // Obtener todos los registros de censo - GET
-router.get("/censo/datos", async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
     const registros = await Censo.find();
     res.json(registros);
