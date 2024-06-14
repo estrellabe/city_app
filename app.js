@@ -20,6 +20,7 @@ var contaminacionAcusticaRouter = require("./routes/contaminacionAcustica");
 var contenedoresRouter = require("./routes/contenedores");
 var peatonesRouter = require("./routes/peatones");
 var censoRouter = require("./routes/censo");
+var usuariosRouter = require("./routes/usuarios");
 
 var app = express();
 
@@ -57,6 +58,7 @@ app.use("/contaminacionAcustica", contaminacionAcusticaRouter);
 app.use("/contenedores", contenedoresRouter);
 app.use("/peatones", peatonesRouter);
 app.use("/censo", censoRouter);
+app.use("/api", usuariosRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
