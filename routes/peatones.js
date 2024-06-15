@@ -16,7 +16,7 @@ db.once("open", function () {
 // Obtener los registros de todos los peatones - GET
 router.get('/all', async (req, res) => {
   try {
-    const peatones = await Peaton.find().limit(3000);
+    const peatones = await Peaton.find().limit(7000);
     res.json(peatones);
   } catch (error) {
     res.status(500).json({ error: error.message });
