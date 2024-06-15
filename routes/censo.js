@@ -24,16 +24,5 @@ router.get("/all", async (req, res) => {
   }
 });
 
-// Obtener registros de censo por distrito - No utilizada
-router.get("/distrito/:distrito", async (req, res) => {
-  try {
-    const registros = await Censo.find({ DISTRITO: req.params.distrito });
-    if (!registros) return res.status(404).json({ error: "Registro no encontrado" });
-    res.json(registros);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 
 module.exports = router;

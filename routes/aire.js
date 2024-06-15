@@ -1,4 +1,3 @@
-// Propósito: Definir las rutas y operaciones CRUD para el modelo Aire
 var express = require("express");
 var mongoose = require("mongoose");
 var router = express.Router();

@@ -22,4 +22,4 @@ var ContenedorSchema = new Schema({
   DIRECCION: { type: String }
 });
 
-module.exports = mongoose.model("Contenedor", ContenedorSchema);
+module.exports = mongoose.model("Contenedor", ContenedorSchema, "contenedores");

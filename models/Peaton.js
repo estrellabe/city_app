@@ -21,4 +21,4 @@ var PeatonSchema = new Schema({
   DIA: { type: Number, required: true }
 });
 
-module.exports = mongoose.model("Peaton", PeatonSchema);
+module.exports = mongoose.model("Peaton", PeatonSchema, "peatones");
