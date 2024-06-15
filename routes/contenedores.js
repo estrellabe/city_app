@@ -16,7 +16,7 @@ db.once("open", function () {
 // Obtener todos los contenedores - GET
 router.get('/all', async (req, res) => {
   try {
-    const contenedores = await Contenedor.find();
+    const contenedores = await Contenedor.find().limit(5000);
     res.json(contenedores);
   } catch (error) {
     res.status(500).json({ error: error.message });
