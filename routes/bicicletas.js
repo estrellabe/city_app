@@ -28,7 +28,7 @@ router.post('/', async (req, res) => {
 // Obtener todas las bicicletas - GET
 router.get('/all', async (req, res) => {
   try {
-    const bicicletas = await Bicicleta.find().limit(10000);
+    const bicicletas = await Bicicleta.find().limit(1000);
     res.json(bicicletas);
   } catch (error) {
     res.status(500).json({ error: error.message });
