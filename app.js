@@ -56,7 +56,7 @@ app.use("/contaminacionAcustica", contaminacionAcusticaRouter);
 app.use("/contenedores", contenedoresRouter);
 app.use("/peatones", peatonesRouter);
 app.use("/censo", censoRouter);
-app.use("/api", usuariosRouter);
+app.use("/usuarios", usuariosRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

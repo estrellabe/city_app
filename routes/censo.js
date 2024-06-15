@@ -24,7 +24,7 @@ router.get("/all", async (req, res) => {
   }
 });
 
-// Obtener registros de censo por distrito - GET
+// Obtener registros de censo por distrito - No utilizada
 router.get("/distrito/:distrito", async (req, res) => {
   try {
     const registros = await Censo.find({ DISTRITO: req.params.distrito });

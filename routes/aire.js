@@ -48,7 +48,7 @@ router.get('/media/anual', async (req, res) => {
 
 
 
-// Obtener los registros de aire por mes - GET
+// Obtener los registros de aire por mes - No utilizada
 router.get('/mes/:mes', async (req, res) => {
   const mes = parseInt(req.params.mes, 10);
   try {
@@ -73,7 +73,7 @@ router.get('/mes/:mes', async (req, res) => {
 });
 
 
-// Obtener todos los registros de aire - GET
+// Obtener todos los registros de aire - No utilizada
 router.get('/', async (req, res) => {
   try {
     const aireData = await Aire.find();

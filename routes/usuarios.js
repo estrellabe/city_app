@@ -45,21 +45,5 @@ router.get("/me", verificarToken, async (req, res) => {
   }
 });
 
-/* POST a new user */
-router.post("/", function (req, res, next) {
-  var new_user = req.body; 
-  res.status(200).send("Usuario " + req.body.email + " añadido correctamente");
-});
-
-/* PUT user by email */
-router.put("/:email", function (req, res, next) {
-  var updated_user = req.body;
-  res.status(200).send("El usuario " + req.body.email + " ha sido actualizado");
-});
-
-/* DELETE user by email */
-router.delete("/:email", function (req, res, next) {
-  res.status(200).send("El usuario " + req.params.email + " ha sido eliminado");
-});
 
 module.exports = router;
