@@ -22,4 +22,4 @@ var BicicletaSchema = new Schema({
   dia: { type: Number, required: true }
 });
 
-module.exports = mongoose.model("Bicicleta", BicicletaSchema);
+module.exports = mongoose.model("Bicicleta", BicicletaSchema, "bicicletas");
