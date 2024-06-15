@@ -17,8 +17,8 @@ var ContenedorSchema = new Schema({
   NUMERO: { type: Number, required: true },
   COORDENADA_X: { type: Number },
   COORDENADA_Y: { type: Number },
-  LONGITUD: { type: Number },
-  LATITUD: { type: Number },
+  LONGITUD: { type: Number , required: true},
+  LATITUD: { type: Number , required: true},
   DIRECCION: { type: String }
 });
 
