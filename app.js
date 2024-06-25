@@ -14,11 +14,7 @@ var cors = require("cors");
 
 var indexRouter = require("./routes/index");
 var aireRouter = require("./routes/aire");
-var multasRouter = require("./routes/multas");
 var bicicletasRouter = require("./routes/bicicletas");
-var contaminacionAcusticaRouter = require("./routes/contaminacionAcustica");
-var contenedoresRouter = require("./routes/contenedores");
-var peatonesRouter = require("./routes/peatones");
 var censoRouter = require("./routes/censo");
 var usuariosRouter = require("./routes/usuarios");
 
@@ -50,11 +46,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Configuración de rutas
 app.use("/", indexRouter);
 app.use("/aire", aireRouter);
-app.use("/multas", multasRouter);
 app.use("/bicicletas", bicicletasRouter);
-app.use("/contaminacionAcustica", contaminacionAcusticaRouter);
-app.use("/contenedores", contenedoresRouter);
-app.use("/peatones", peatonesRouter);
 app.use("/censo", censoRouter);
 app.use("/usuarios", usuariosRouter);
 
