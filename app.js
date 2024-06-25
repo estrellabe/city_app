@@ -16,7 +16,6 @@ var indexRouter = require("./routes/index");
 var aireRouter = require("./routes/aire");
 var bicicletasRouter = require("./routes/bicicletas");
 var censoRouter = require("./routes/censo");
-var usuariosRouter = require("./routes/usuarios");
 
 var app = express();
 
@@ -48,7 +47,6 @@ app.use("/", indexRouter);
 app.use("/aire", aireRouter);
 app.use("/bicicletas", bicicletasRouter);
 app.use("/censo", censoRouter);
-app.use("/usuarios", usuariosRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
